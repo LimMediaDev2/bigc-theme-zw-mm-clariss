@@ -1,0 +1,128 @@
+<nav class="navUser">
+    <ul class="navUser-section navUser-section--alt">
+        {{#if customer.store_credit.value '>' 0}}
+            <li class="navUser-item">
+                <a class="navUser-action navUser-action--storeCredit"
+                   data-dropdown="storeCredit-dropdown"
+                   data-options="align:bottom"
+                   href="{{urls.cart}}"
+                   aria-label="{{lang 'common.store_credit_overview' credit=customer.store_credit.formatted}}"
+                >
+                    <span class="navUser-action-divider">
+                        {{lang 'common.store_credit_overview' credit=customer.store_credit.formatted}}
+                    </span>
+                </a>
+                <div class="dropdown-menu" id="storeCredit-dropdown" data-dropdown-content aria-hidden="true">
+                    {{{lang 'common.store_credit' store_credit=customer.store_credit.formatted}}}
+                </div>
+            </li>
+        {{/if}}
+        <li class="navUser-item">
+            <a class="navUser-action navUser-item--compare"
+               href="{{urls.compare}}"
+               data-compare-nav
+               aria-label="{{lang 'common.compare'}}"
+            >
+            {{> components/gordonbyte/common/compare-icon }}    
+            <span class="headerTitle">{{lang 'common.compare'}}</span> <span class="countPill countPill--positive countPill--alt"></span>
+            </a>
+        </li>
+
+        {{#or (if theme_settings.logo-position '===' 'left') (if theme_settings.logo-position '===' 'center')}}
+        <li class="navUser-item megamen">
+            <button class="navUser-action navUser-action--quickSearch"
+               type="button"
+               id="quick-search-expand"
+               data-search="quickSearch"
+               aria-controls="quickSearch"
+               aria-label="{{lang 'common.search'}}"
+            >
+            {{> components/gordonbyte/common/search-icon }}
+            <span class="headerTitle">{{lang 'common.search'}}</span>
+            </button>
+        </li>
+        {{/or}}
+
+        {{#if settings.gift_certificates_enabled}}
+            <li class="navUser-item">
+                <a class="navUser-action"
+                   href="{{urls.gift_certificate.purchase}}"
+                   aria-label="{{lang 'common.gift_cert'}}"
+                >
+                {{> components/gordonbyte/common/gift-icon }}
+                    <span class="headerTitle">{{lang 'common.gift_cert'}}
+                </a>
+            </li>
+        {{/if}}
+        
+        <li class="navUser-item navUser-item--account">
+            {{#if customer}}
+                <a class="navUser-action"
+                   href="{{urls.account.index}}"
+                   aria-label="{{lang 'common.account'}}"
+                >
+                    {{> components/gordonbyte/common/account-icon }}
+                    <span class="headerTitle">{{lang 'common.account'}}</span>
+                </a>
+                <a class="navUser-action hidden"
+                   href="{{urls.auth.logout}}"
+                   aria-label="{{lang 'common.logout'}}"
+                >
+                    {{lang 'common.logout'}}
+                </a>
+            {{else}}
+                <a class="navUser-action"
+                   href="{{urls.auth.login}}"
+                   aria-label="{{lang 'common.login'}}"
+                >
+                {{> components/gordonbyte/common/account-icon }}
+                <span class="headerTitle">{{lang 'common.login'}}</span>
+                </a>
+                {{#if settings.account_creation_enabled}}
+                    <span class="navUser-or hidden">{{lang 'common.or'}}</span>
+                    <a class="navUser-action hidden"
+                       href="{{urls.auth.create_account}}"
+                       aria-label="{{lang 'common.sign_up'}}"
+                    >
+                        {{lang 'common.sign_up'}}
+                    </a>
+                {{/if}}
+            {{/if}}
+        </li>
+
+        <li class="navUser-item navUser-item--cart">
+            <a class="navUser-action"
+               data-cart-preview
+               data-dropdown="cart-preview-dropdown"
+               data-options="align:right"
+               href="{{urls.cart}}"
+               aria-label="{{lang 'cart.nav_aria_label'}}"
+            >
+                {{> components/gordonbyte/common/cart-icon}}
+                <span class="navUser-item-cartLabel headerTitle">{{lang 'common.cart'}}</span>
+                <span class="countPill cart-quantity"></span>
+            </a>
+
+            <div class="dropdown-menu" id="cart-preview-dropdown" data-dropdown-content aria-hidden="true"></div>
+        </li>
+
+    </ul>
+    {{#or customer (unless settings.hide_price_from_guests)}}
+        <div class="navUser-item--currency">
+            {{> components/common/currency-selector}}
+        </div>
+    {{/or}}
+
+    {{#or (if theme_settings.logo-position '===' 'left') (if theme_settings.logo-position '===' 'center')}}
+    <!-- separate Search style -->
+    <div class="dropdown dropdown--quickSearch" id="quickSearch" aria-hidden="true" tabindex="-1" data-prevent-quick-search-close>
+        <div class="searchHolder">
+        <div class="closeSearch">
+            <button class="closeSearch-btn">Close</button>
+        </div><!--.closeSearch ends-->
+        {{> components/gordonbyte/common/quick-search name='nav-quick-search'}}
+        </div><!--.searchHolder ends-->
+    </div>
+    <!-- separate Search style -->
+    {{/or}}
+</nav>
