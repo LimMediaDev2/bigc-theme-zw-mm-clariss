@@ -804,14 +804,20 @@
         "quantity_min": "The minimum purchasable quantity is {quantity}",
         "quantity_max": "The maximum purchasable quantity is {quantity}",
         "bulk_pricing": {
-            "title": "Bulk Pricing:",
+            "title": "Quantity Discounts",
             "view": "Buy in bulk and save",
             "modal_title": "Bulk discount rates",
             "instructions": "Below are the available bulk discount rates for each individual item when you purchase a certain amount",
             "range": "Buy {min} {max, plural, =0{or above} other {- #}}",
+            "range_short": "{min} {max, plural, =0{+} other {- #}}",
             "percent": "and get {discount} off",
             "price": "and get {discount} off",
-            "fixed": "and pay only {discount} each"
+            "price_text": "Price Each",
+            "fixed": "and pay only {discount} each",
+            "saving_text": "Savings",
+            "quantity_text": "Quantity",
+            "message": "Buy more - Save more",
+            "saving_percent": "{percent} %"
         },
         "card_default_image_alt": "Image coming soon"
     },

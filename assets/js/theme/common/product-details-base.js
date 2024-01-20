@@ -266,9 +266,13 @@ export default class ProductDetailsBase {
         this.updateDefaultAttributesForOOS(data);
         this.updateWalletButtonsView(data);
 
+        let newContent = this.updateBulkDiscountTable(data.price, data.bulk_discount_rates);
+
         // If Bulk Pricing rendered HTML is available
         if (data.bulk_discount_rates && content) {
-            viewModel.$bulkPricing.html(content);
+            viewModel.$bulkPricing.html(newContent);
+        //} else if (data.bulk_discount_rates && content) {
+        //    viewModel.$bulkPricing.html(content);
         } else if (typeof (data.bulk_discount_rates) !== 'undefined') {
             viewModel.$bulkPricing.html('');
         }
@@ -424,5 +428,75 @@ export default class ProductDetailsBase {
         } else {
             $attribute.html($attribute.html().replace(outOfStockMessage, ''));
         }
+    }
+
+    /**
+     * Custom Bulk Discount Table
+     * @author LimMedia.io
+     * @param {*} price 
+     * @param {*} bulk_discount_rates 
+     * @returns 
+     */
+    updateBulkDiscountTable(price, bulk_discount_rates) {
+        if (bulk_discount_rates.length == 0) {
+            return '';
+        }
+
+        let TableData = `<h2 class="productView-title-bulkPricing">Quantity Discounts</h2>
+        <table class="productView-table-bulkPricing">
+            <tbody>
+                <tr>
+                    <th>Quantity</th>`;
+
+        bulk_discount_rates.forEach((bulk_discount_rate, i) => {
+            TableData = TableData + `<td>` + bulk_discount_rate.min.toString() + (bulk_discount_rate.max > 1 ? ' - ' + bulk_discount_rate.max : '+') + `</td>`;
+        });
+
+        TableData = TableData + `</tr><tr><th>Price each</th>`;
+
+        bulk_discount_rates.forEach((bulk_discount_rate, i) => {
+            TableData = TableData + `<td>`;
+
+            let value = 0;
+
+            if (!(typeof price.with_tax === 'undefined')) {
+                value = price.with_tax.value;
+            } else {
+                value = price.without_tax.value;
+            }
+
+            if (bulk_discount_rate.type == 'percent') {
+                TableData = TableData + this.moneyFormatterLocal(value - ((bulk_discount_rate.discount.value * value) / 100));
+            }
+
+            if (bulk_discount_rate.type == 'fixed') {
+                TableData = TableData + bulk_discount_rate.discount.formatted.toString();
+            }
+
+            if (bulk_discount_rate.type == 'price') {
+                TableData = TableData + this.moneyFormatterLocal(value - bulk_discount_rate.discount.value);
+            }
+
+            TableData = TableData + `</td>`;
+        });
+
+        TableData = TableData + `</tr></tbody></table>`;
+
+        return TableData;
+    }
+
+    /**
+     * Custom Money Formatter
+     * @author LimMedia.io
+     * @param {*} money 
+     * @returns 
+     */
+    moneyFormatterLocal(money) {
+        let formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+        });
+
+        return formatter.format(money).toString();
     }
 }

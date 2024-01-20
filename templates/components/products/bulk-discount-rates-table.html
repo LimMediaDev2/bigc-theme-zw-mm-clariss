@@ -1,0 +1,42 @@
+{{!-- LimMedia.io --}}
+{{#if bulk_discount_rates.length '>' 0}}
+<h2 class="productView-title-bulkPricing">{{lang 'products.bulk_pricing.title'}}</h2>
+<table class="productView-table-bulkPricing">
+    <tbody>
+        <tr>
+            <th>{{lang 'products.bulk_pricing.quantity_text'}}</th>
+            {{#each bulk_discount_rates}}
+            <td>
+                {{lang 'products.bulk_pricing.range_short' min=min max=max}}
+            </td>
+            {{/each}}
+        </tr>
+        <tr>
+            <th>{{lang 'products.bulk_pricing.price_text'}}</th>
+            {{#each bulk_discount_rates}}
+            <td>
+                {{#if type '===' 'percent'}}
+                    {{#if ../price.with_tax}}
+                        {{money (subtract ../price.with_tax.value (divide (multiply discount.value ../price.with_tax.value) 100))}}
+                    {{else}}
+                        {{money (subtract ../price.without_tax.value (divide (multiply discount.value ../price.without_tax.value) 100))}}
+                    {{/if}}
+                {{/if}}
+                
+                {{#if type '===' 'fixed'}}
+                    {{discount.formatted}}
+                {{/if}}
+                
+                {{#if type '===' 'price'}}
+                    {{#if ../price.with_tax}}
+                        {{money (subtract ../price.with_tax.value discount.value)}}
+                    {{else}}
+                        {{money (subtract ../price.without_tax.value discount.value)}}
+                    {{/if}}
+                {{/if}}
+            </td>
+            {{/each}}
+        </tr>
+    </tbody>
+</table>
+{{/if}}
